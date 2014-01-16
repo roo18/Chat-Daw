@@ -1,0 +1,43 @@
+@CHARSET "ISO-8859-1";
+
+html,body {
+	height: 100%;
+}
+
+body {
+	margin: 0px;
+	padding: 0px;
+	background: #B68C8C;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 11pt;
+	font-weight: 300;
+	color: #6c6c6c
+}
+
+h1,h2,h3 {
+	margin: 0;
+	padding: 0;
+	font-weight: 600;
+	color: #454445;
+	align: center;
+}
+
+p,ol,ul {
+	margin-top: 0;
+}
+
+ol,ul {
+	padding: 0;
+	list-style: none;
+}
+
+p {
+	line-height: 180%;
+}
+div
+{
+
+background:#B68C8C;
+
+}
+

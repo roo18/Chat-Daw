@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<LINK REL=StyleSheet HREF="/chat-daw/css/style2.css" TYPE="text/css" MEDIA=screen>
+</head>
+
+<body>
+<table class="marco" align="center">
+
+<tr class="titulo"><td>
+  Chat con Servlets 
+  </td></tr>
+
+<tbody>
+
+<tr class="marco">
+<td class="marco">
+
+
