@@ -10,62 +10,95 @@
 <project name="chat-daw" default="default" basedir=".">
     <description>Builds, tests, and runs the project chat-daw.</description>
     <import file="nbproject/build-impl.xml"/>
-    <!--
+    <description>Genera War y Javadocs de project chat-daw.</description>
+    <import file="nbproject/build-impl.xml"/>
+  
+    <property name="tomcat.home" value="C:\Program Files\Apache Software Foundation\Apache Tomcat 7.0.34" />
+    <property name="app.name" value="chat-daw" />
+    <property name="context.path" value="/${app.name}" />
+    <property name="src.home" value="${basedir}/src/java" />
+    <property name="web.home" value="${basedir}/web" />
+    <property name="conf.home" value="${basedir}/src/conf" />
+    <property name="lib.home" value="${basedir}/lib" />
+    <property name="docs.home" value="${basedir}/docs" />
+    <property name="build.home" value="${basedir}/build" />
+    <property name="dist.home" value="${basedir}/dist" />
+    <property name="war.file" value="${dist.home}/${app.name}.war" />
 
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
-
-      -pre-init:                 called before initialization of project properties 
-      -post-init:                called after initialization of project properties 
-      -pre-compile:              called before javac compilation 
-      -post-compile:             called after javac compilation 
-      -pre-compile-single:       called before javac compilation of single file
-      -post-compile-single:      called after javac compilation of single file
-      -pre-compile-test:         called before javac compilation of JUnit tests
-      -post-compile-test:        called after javac compilation of JUnit tests
-      -pre-compile-test-single:  called before javac compilation of single JUnit test
-      -post-compile-test-single: called after javac compilation of single JUunit test
-      -pre-dist:                 called before archive building 
-      -post-dist:                called after archive building 
-      -post-clean:               called after cleaning build products 
-      -pre-run-deploy:           called before deploying
-      -post-run-deploy:          called after deploying
-
-    Example of pluging an obfuscator after the compilation could look like 
-
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
-
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
+    <property name="tomcat.manager.url" value="http://localhost:8080/manager" />
+    <property name="tomcat.username" value="tomcat" />
+    <property name="tomcat.password" value="tomcat" />
 
 
-    Other way how to customize the build is by overriding existing main targets.
-    The target of interest are: 
+    <target name="clean" description="Borratodo lo generado por el script t">
+        <delete dir="${build.home}" />
+        <delete dir="${dist.home}" />
+        <delete dir="${docs.home}" />
+    </target>
+    
+    <target name="init">
+        <mkdir dir="${build.home}" />
+        <mkdir dir="${docs.home}" />
+        <mkdir dir="${dist.home}" />
 
-      init-macrodef-javac:    defines macro for javac compilation
-      init-macrodef-junit:   defines macro for junit execution
-      init-macrodef-debug:    defines macro for class debugging
-      do-dist:                archive building
-      run:                    execution of project 
-      javadoc-build:          javadoc generation 
+        <path id="classpath">
+            <fileset dir="${tomcat.home}/lib">
+                <include name="servlet-api.jar" />
+            </fileset>
+        </path>
+        <property name="classpath" refid="classpath" />
+    </target>
+    
+    <target name="compile" depends="init">
+        <echo message="Classpath set to ${classpath}" />
+        <javac srcdir="${src.home}" destdir="${build.home}" debug="true" classpath="${classpath}" deprecation="true" >
+        </javac>
+        <copy todir="${build.home}" >
+            <fileset dir="${conf.home}" />
+        </copy>
+    </target> 
 
-    Example of overriding the target for project execution could look like 
+    <target name="CrearWar" depends="compile" description="Creates the deployable WAR file">
+        <war destfile="${war.file}" webxml="${web.home}/WEB-INF/web.xml">
+            <fileset dir="${web.home}" excludes="**/web.xml" />
+            <lib dir="${lib.home}"/>
+            <classes dir="${build.home}" />
+        </war>
+    </target>
 
-        <target name="run" depends="<PROJNAME>-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
+    <target name="CrearJavadoc" depends="init" description="Creates the Javadocs for the project">
+        <javadoc sourcepath="${src.home}"
+                 packagenames="com.fpmislata.*"
+                 classpath="${classpath}"
+                 destdir="${docs.home}"
+                 windowtitle="Javadoc para chat-daw">
+        </javadoc>
+    </target>
 
-    Notice that overridden target depends on jar target and not only on 
-    compile target as regular run target does. Again, for list of available 
-    properties which you can use check the target you are overriding in 
-    nbproject/build-impl.xml file. 
 
-    -->
+    <target name="deploy" depends="dist" description="Plegar aplicación chat-daw">
+        <deploy url="${tomcat.manager.url}" username="${tomcat.username}"
+                password="${tomcat.password}" path="${context.path}" war="${war.file}" update="true" />
+    </target>
+    
+    <target name="undeploy" description="Desplegar aplicación chat-daw">
+        <undeploy url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="${context.path}" />
+    </target>
+    
+    <target name="start" description="Iniciar aplicación chat-daw">
+        <start url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="${context.path}" />
+    </target>
+
+
+    <target name="reload" description="Reiniciar aplicación chat-daw">
+        <reload url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="${context.path}" />
+    </target>
+    
+    <target name="stop" description="Deneter aplicación chat-daw">
+        <stop url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}" path="${context.path}" />
+    </target>
+    
+    <target name="list" description="Listar aplicaciones desplegadas">
+        <list url="${tomcat.manager.url}" username="${tomcat.username}" password="${tomcat.password}"/>
+    </target>
 </project>
